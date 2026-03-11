@@ -1,0 +1,16 @@
+apiVersion: trustyai.opendatahub.io/v1alpha1
+kind: NemoGuardrails
+metadata:
+  name: nemoguardrails
+  namespace: llm
+  annotations:
+    security.opendatahub.io/enable-auth: 'true'
+spec:
+  nemoConfigs:
+    - name: guardrail-qwen
+      configMaps:
+        - guardrail-qwen
+      default: true
+  env:
+    - name: "OPENAI_API_KEY"
+      value: "fake"
