@@ -1,0 +1,23 @@
+apiVersion: trustyai.opendatahub.io/v1alpha1
+kind: NemoGuardrails
+metadata:
+  name: nemoguardrails
+  namespace: llm
+  annotations:
+    security.opendatahub.io/enable-auth: 'true'
+spec:
+  nemoConfigs:
+    - name: guardrail-openai
+      configMaps:
+        - guardrail-openai
+      default: true
+  env:
+    # Model reads its key from OPENAI_KEY_GPT4O via api_key_env_var field
+    - name: "OPENAI_KEY_GPT4O"
+      valueFrom:
+        secretKeyRef:
+          name: "openai-guardrail-config"
+          key: "openai-api-key"
+    # SDK requires OPENAI_API_KEY to be set even if the model uses a different env var
+    - name: "OPENAI_API_KEY"
+      value: "fake-not-used-model-reads-OPENAI_KEY_GPT4O"

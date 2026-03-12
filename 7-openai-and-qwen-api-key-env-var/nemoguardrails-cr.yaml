@@ -1,0 +1,31 @@
+apiVersion: trustyai.opendatahub.io/v1alpha1
+kind: NemoGuardrails
+metadata:
+  name: nemoguardrails
+  namespace: llm
+  annotations:
+    security.opendatahub.io/enable-auth: 'true'
+spec:
+  nemoConfigs:
+    - name: guardrail-openai
+      configMaps:
+        - guardrail-openai
+      default: true
+    - name: guardrail-qwen
+      configMaps:
+        - guardrail-qwen
+  env:
+    # Each model reads its own key via api_key_env_var
+    - name: "OPENAI_KEY"
+      valueFrom:
+        secretKeyRef:
+          name: "openai-guardrail-config"
+          key: "openai-api-key"
+    - name: "QWEN_KEY"
+      valueFrom:
+        secretKeyRef:
+          name: "qwen-sa-token"
+          key: "token"
+    # SDK requires OPENAI_API_KEY to be set
+    - name: "OPENAI_API_KEY"
+      value: "fake-not-used-models-use-api-key-env-var"

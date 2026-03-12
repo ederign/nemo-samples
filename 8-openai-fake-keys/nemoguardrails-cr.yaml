@@ -1,0 +1,17 @@
+apiVersion: trustyai.opendatahub.io/v1alpha1
+kind: NemoGuardrails
+metadata:
+  name: nemoguardrails
+  namespace: llm
+  annotations:
+    security.opendatahub.io/enable-auth: 'true'
+spec:
+  nemoConfigs:
+    - name: guardrail-openai
+      configMaps:
+        - guardrail-openai
+      default: true
+  env:
+    # No THIS_ENV_VAR_DOES_NOT_EXIST mounted — testing missing env var behavior
+    - name: "OPENAI_API_KEY"
+      value: "fake-sdk-requirement"

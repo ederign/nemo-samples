@@ -1,0 +1,29 @@
+apiVersion: trustyai.opendatahub.io/v1alpha1
+kind: NemoGuardrails
+metadata:
+  name: nemoguardrails
+  namespace: llm
+  annotations:
+    security.opendatahub.io/enable-auth: 'true'
+spec:
+  nemoConfigs:
+    - name: guardrail-openai
+      configMaps:
+        - guardrail-openai
+      default: true
+    - name: guardrail-qwen
+      configMaps:
+        - guardrail-qwen
+  env:
+    # OpenAI needs a real key
+    - name: "OPENAI_KEY"
+      valueFrom:
+        secretKeyRef:
+          name: "openai-guardrail-config"
+          key: "openai-api-key"
+    # Qwen has no auth — fake key, vLLM ignores it
+    - name: "QWEN_KEY"
+      value: "fake-no-auth-needed"
+    # SDK requirement
+    - name: "OPENAI_API_KEY"
+      value: "fake-sdk-requirement"
